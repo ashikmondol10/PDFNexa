@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDFNexa — All-in-One Premium PDF Powerhouse</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              indigo: '#1E1B4B',
+              indigoLight: '#312E81',
+              purple: '#7C3AED',
+              purpleHover: '#6D28D9',
+              purpleSoft: '#F3E8FF',
+              surface: '#F8FAFC'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    .hero-gradient {
+      background: radial-gradient(circle at 80% 20%, rgba(124, 58, 237, 0.35), transparent 45%),
+                  radial-gradient(circle at 15% 80%, rgba(99, 102, 241, 0.25), transparent 45%),
+                  linear-gradient(135deg, #1E1B4B 0%, #2E1065 55%, #1E1B4B 100%);
+    }
+    .tool-card {
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .tool-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 25px -5px rgba(30, 27, 75, 0.08), 0 8px 10px -6px rgba(124, 58, 237, 0.08);
+      border-color: rgba(124, 58, 237, 0.35);
+    }
+    .dropzone-active {
+      border-color: #A78BFA !important;
+      background-color: rgba(124, 58, 237, 0.22) !important;
+      transform: scale(1.01);
+    }
+  </style>
+</head>
+<body class="bg-brand-surface text-slate-800 font-sans antialiased selection:bg-brand-purple selection:text-white">
+
+  <!-- Top Navigation -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 py-3.5 flex items-center justify-between">
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="relative w-11 h-11 flex items-center justify-center">
+          <svg viewBox="0 0 48 48" class="w-11 h-11 drop-shadow-sm transition-transform duration-200 group-hover:scale-105" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="logoGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#7C3AED"/>
+                <stop offset="100%" stop-color="#312E81"/>
+              </linearGradient>
+            </defs>
+            <path d="M8 6C8 3.79086 9.79086 2 12 2H30L40 12V42C40 44.2091 38.2091 46 36 46H12C9.79086 46 8 44.2091 8 42V6Z" fill="url(#logoGrad)"/>
+            <path d="M30 2L40 12H33C31.3431 12 30 10.6569 30 9V2Z" fill="#C4B5FD"/>
+            <rect x="13" y="9" width="14" height="6.5" rx="2" fill="white" fill-opacity="0.2"/>
+            <text x="20" y="13.8" text-anchor="middle" fill="white" font-size="5.2" font-weight="800" font-family="Plus Jakarta Sans, sans-serif" letter-spacing="0.5">PDF</text>
+            <path d="M16 37V21H19.8L28.2 31.5V21H32V37H28.4L19.8 26.2V37H16Z" fill="white"/>
+          </svg>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-2xl font-extrabold tracking-tight text-brand-indigo leading-none">PDF<span class="text-brand-purple">Nexa</span></span>
+          <span class="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mt-0.5">Global PDF Suite</span>
+        </div>
+      </a>
+
+      <!-- Center Nav Links -->
+      <nav class="hidden lg:flex items-center gap-7 text-sm font-semibold text-slate-600">
+        <a href="#tools-section" onclick="filterByCategory('organize')" class="hover:text-brand-purple transition">Merge & Split</a>
+        <a href="#tools-section" onclick="filterByCategory('optimize')" class="hover:text-brand-purple transition">Compress PDF</a>
+        <div class="relative group">
+          <button class="flex items-center gap-1 hover:text-brand-purple transition py-2">
+            Convert PDF <i data-lucide="chevron-down" class="w-4 h-4"></i>
+          </button>
+          <div class="absolute left-0 top-full pt-2 w-64 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150">
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-3 grid gap-1">
+              <button onclick="openToolModal('PDF to Word')" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-purple-50 text-left transition">
+                <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center"><i data-lucide="file-text" class="w-4 h-4"></i></span>
+                <div>
+                  <div class="text-xs font-bold text-slate-800">PDF to Word</div>
+                  <div class="text-[11px] text-slate-400">Editable DOCX format</div>
+                </div>
+              </button>
+              <button onclick="openToolModal('PDF to Excel')" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-purple-50 text-left transition">
+                <span class="w-8 h-8 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center"><i data-lucide="table" class="w-4 h-4"></i></span>
+                <div>
+                  <div class="text-xs font-bold text-slate-800">PDF to Excel</div>
+                  <div class="text-[11px] text-slate-400">Extract tables to XLSX</div>
+                </div>
+              </button>
+              <button onclick="openToolModal('Word to PDF')" class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-purple-50 text-left transition">
+                <span class="w-8 h-8 rounded-lg bg-violet-100 text-violet-700 flex items-center justify-center"><i data-lucide="file-check" class="w-4 h-4"></i></span>
+                <div>
+                  <div class="text-xs font-bold text-slate-800">Word to PDF</div>
+                  <div class="text-[11px] text-slate-400">Preserve layout & fonts</div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+        <a href="#tools-section" onclick="filterByCategory('all')" class="hover:text-brand-purple transition flex items-center gap-1.5">
+          All 32+ Tools <span class="px-2 py-0.5 text-[10px] font-bold bg-purple-100 text-brand-purple rounded-full">PRO</span>
+        </a>
+        <a href="#pricing-section" class="hover:text-brand-purple transition">Pricing</a>
+      </nav>
+
+      <!-- Right Actions -->
+      <div class="flex items-center gap-3">
+        <button onclick="openAuthModal('login')" class="hidden sm:inline-flex px-4 py-2 text-sm font-semibold text-slate-700 hover:text-brand-purple transition">
+          Log in
+        </button>
+        <button onclick="openAuthModal('signup')" class="px-5 py-2.5 text-sm font-bold text-white bg-brand-purple hover:bg-brand-purpleHover rounded-xl shadow-md shadow-purple-600/20 transition">
+          Sign Up Free
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-gradient text-white relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-20 lg:pt-20 lg:pb-24 relative z-10">
+      <div class="text-center max-w-3xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 text-purple-200 text-xs font-semibold mb-6 backdrop-blur-sm">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Trusted by 1.4M+ Professionals & Teams Worldwide
+        </div>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.12]">
+          Every PDF Tool You Need, <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-violet-200 to-indigo-200">In One Place.</span>
+        </h1>
+        <p class="mt-5 text-base sm:text-lg text-indigo-100/85 max-w-2xl mx-auto leading-relaxed">
+          Merge, split, compress, convert, edit, e-sign, and secure your PDF documents in seconds with 30+ cloud-powered tools. 100% private and browser-fast.
+        </p>
+      </div>
+
+      <!-- Interactive Drag & Drop Workspace -->
+      <div class="mt-10 max-w-3xl mx-auto">
+        <div id="heroDropzone" class="rounded-3xl border-2 border-dashed border-purple-300/45 bg-white/10 backdrop-blur-md p-8 sm:p-11 text-center transition-all duration-200 hover:border-purple-300">
+          <input type="file" id="heroFileInput" class="hidden" accept=".pdf,.doc,.docx,.jpg,.png,.xlsx,.pptx" multiple />
+          <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-950/50 mb-5">
+            <i data-lucide="upload-cloud" class="w-8 h-8 text-white"></i>
+          </div>
+          <h2 class="text-xl sm:text-2xl font-bold text-white">Drop your PDF or Office files here</h2>
+          <p class="text-sm text-indigo-200/80 mt-1.5">Supports PDF, Word, Excel, PowerPoint, JPG & PNG up to 250 MB</p>
+
+          <div class="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3.5">
+            <button onclick="document.getElementById('heroFileInput').click()" class="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-white text-brand-indigo font-extrabold text-sm shadow-xl hover:bg-purple-50 transition flex items-center justify-center gap-2">
+              <i data-lucide="folder-open" class="w-4 h-4 text-brand-purple"></i>
+              Select Files from Device
+            </button>
+            <button onclick="loadSampleFile()" class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-brand-purple/90 hover:bg-brand-purple text-white font-bold text-sm border border-purple-400/30 transition flex items-center justify-center gap-2">
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
+              Try with Sample PDF
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats Bar -->
+      <div class="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-4xl mx-auto text-center">
+        <div class="bg-white/5 border border-white/10 rounded-2xl py-3.5 px-4">
+          <div class="text-xl sm:text-2xl font-extrabold text-white">32+</div>
+          <div class="text-xs text-indigo-200/75 font-medium">PDF & Office Tools</div>
+        </div>
+        <div class="bg-white/5 border border-white/10 rounded-2xl py-3.5 px-4">
+          <div class="text-xl sm:text-2xl font-extrabold text-white">256-bit</div>
+          <div class="text-xs text-indigo-200/75 font-medium">TLS File Encryption</div>
+        </div>
+        <div class="bg-white/5 border border-white/10 rounded-2xl py-3.5 px-4">
+          <div class="text-xl sm:text-2xl font-extrabold text-white">190+</div>
+          <div class="text-xs text-indigo-200/75 font-medium">Countries Served</div>
+        </div>
+        <div class="bg-white/5 border border-white/10 rounded-2xl py-3.5 px-4">
+          <div class="text-xl sm:text-2xl font-extrabold text-white">Auto-Delete</div>
+          <div class="text-xs text-indigo-200/75 font-medium">Files Wiped in 1 Hour</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main 32+ Tools Grid Section -->
+  <section id="tools-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+      <div>
+        <span class="text-xs font-extrabold uppercase tracking-wider text-brand-purple bg-purple-100 px-3 py-1 rounded-full">Complete Toolkit</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-brand-indigo mt-3">32+ Professional PDF Tools</h2>
+        <p class="text-slate-500 mt-1.5 text-sm sm:text-base">Click any tool below to launch its dedicated workspace immediately.</p>
+      </div>
+
+      <!-- Search Box -->
+      <div class="relative w-full md:w-80">
+        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+        <input type="text" id="toolSearchInput" oninput="renderTools()" placeholder="Search tools (e.g., Merge, OCR, Sign)..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-purple/30 focus:border-brand-purple transition" />
+      </div>
+    </div>
+
+    <!-- Category Filter Pills -->
+    <div id="categoryTabs" class="flex flex-wrap items-center gap-2 mb-8">
+      <button onclick="filterByCategory('all')" data-cat="all" class="cat-btn active px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-brand-indigo text-white shadow-sm transition">
+        All Tools (32)
+      </button>
+      <button onclick="filterByCategory('organize')" data-cat="organize" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white text-slate-600 border border-slate-200 hover:border-brand-purple/40 transition">
+        Organize PDF
+      </button>
+      <button onclick="filterByCategory('optimize')" data-cat="optimize" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white text-slate-600 border border-slate-200 hover:border-brand-purple/40 transition">
+        Optimize & Repair
+      </button>
+      <button onclick="filterByCategory('from-pdf')" data-cat="from-pdf" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white text-slate-600 border border-slate-200 hover:border-brand-purple/40 transition">
+        Convert from PDF
+      </button>
+      <button onclick="filterByCategory('to-pdf')" data-cat="to-pdf" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white text-slate-600 border border-slate-200 hover:border-brand-purple/40 transition">
+        Convert to PDF
+      </button>
+      <button onclick="filterByCategory('security')" data-cat="security" class="cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white text-slate-600 border border-slate-200 hover:border-brand-purple/40 transition">
+        Edit & Security
+      </button>
+    </div>
+
+    <!-- Dynamic Grid -->
+    <div id="toolsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"></div>
+  </section>
+
+  <!-- Enterprise Trust & Workflow Section -->
+  <section class="bg-white border-y border-slate-200/80 py-16 lg:py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-14">
+        <span class="text-xs font-extrabold uppercase tracking-wider text-brand-purple">Why Choose PDFNexa</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-brand-indigo mt-2">Built for Speed, Precision & Global Privacy</h2>
+        <p class="text-slate-500 mt-2 text-sm sm:text-base">Whether you are a student, freelancer, or Fortune 500 enterprise, PDFNexa keeps your document workflows effortless.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="p-7 rounded-3xl bg-brand-surface border border-slate-100">
+          <div class="w-12 h-12 rounded-2xl bg-purple-100 text-brand-purple flex items-center justify-center mb-5">
+            <i data-lucide="shield-check" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-lg font-extrabold text-brand-indigo">ISO-27001 & GDPR Compliant</h3>
+          <p class="text-sm text-slate-600 mt-2 leading-relaxed">All uploads are encrypted end-to-end with 256-bit SSL and permanently purged from our servers within 60 minutes.</p>
+        </div>
+
+        <div class="p-7 rounded-3xl bg-brand-surface border border-slate-100">
+          <div class="w-12 h-12 rounded-2xl bg-indigo-100 text-brand-indigo flex items-center justify-center mb-5">
+            <i data-lucide="zap" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-lg font-extrabold text-brand-indigo">High-Fidelity OCR & Formatting</h3>
+          <p class="text-sm text-slate-600 mt-2 leading-relaxed">Our AI-powered conversion engine preserves fonts, complex tables, and multi-column layouts across Word, Excel, and PDF.</p>
+        </div>
+
+        <div class="p-7 rounded-3xl bg-brand-surface border border-slate-100">
+          <div class="w-12 h-12 rounded-2xl bg-violet-100 text-violet-700 flex items-center justify-center mb-5">
+            <i data-lucide="globe" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-lg font-extrabold text-brand-indigo">Works on Every Device</h3>
+          <p class="text-sm text-slate-600 mt-2 leading-relaxed">Zero installation required. Access all 32+ tools seamlessly across Windows, macOS, Linux, iOS, and Android browsers.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section id="pricing-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+    <div class="text-center max-w-2xl mx-auto">
+      <span class="text-xs font-extrabold uppercase tracking-wider text-brand-purple bg-purple-100 px-3 py-1 rounded-full">Transparent Pricing</span>
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-brand-indigo mt-3">Simple Plans for Every Workflow</h2>
+      <p class="text-slate-500 mt-2 text-sm sm:text-base">Start free forever, or unlock unlimited batch processing and OCR with PDFNexa Pro.</p>
+
+      <!-- Billing Toggle -->
+      <div class="mt-6 inline-flex items-center gap-3 bg-white p-1.5 rounded-2xl border border-slate-200 shadow-sm">
+        <button id="monthlyBtn" onclick="toggleBilling('monthly')" class="px-4 py-2 rounded-xl text-xs font-bold bg-brand-indigo text-white transition">Monthly</button>
+        <button id="yearlyBtn" onclick="toggleBilling('yearly')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-brand-indigo transition">
+          Yearly <span class="ml-1 text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">Save 40%</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-7 max-w-5xl mx-auto">
+      <!-- Free Tier -->
+      <div class="bg-white rounded-3xl p-8 border border-slate-200 flex flex-col justify-between">
+        <div>
+          <h3 class="text-lg font-extrabold text-brand-indigo">Starter Free</h3>
+          <p class="text-xs text-slate-500 mt-1">Essential everyday PDF tasks</p>
+          <div class="mt-5 flex items-baseline gap-1">
+            <span class="text-4xl font-extrabold text-brand-indigo">$0</span>
+            <span class="text-xs text-slate-400 font-semibold">/ forever</span>
+          </div>
+          <ul class="mt-6 space-y-3 text-sm text-slate-600">
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-brand-purple"></i> Access to all 32+ PDF tools</li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-brand-purple"></i> Up to 2 files per batch</li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-brand-purple"></i> Standard compression & conversion</li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-brand-purple"></i> 256-bit TLS encryption</li>
+          </ul>
+        </div>
+        <button onclick="openAuthModal('signup')" class="mt-8 w-full py-3 rounded-xl border border-slate-300 text-brand-indigo font-bold text-sm hover:border-brand-purple hover:text-brand-purple transition">
+          Get Started Free
+        </button>
+      </div>
+
+      <!-- Pro Tier -->
+      <div class="bg-brand-indigo text-white rounded-3xl p-8 border-2 border-brand-purple shadow-2xl shadow-indigo-950/20 relative flex flex-col justify-between">
+        <span class="absolute -top-3.5 right-6 bg-gradient-to-r from-purple-500 to-indigo-500 text-white text-[11px] font-extrabold uppercase tracking-wider px-3.5 py-1 rounded-full shadow">Most Popular</span>
+        <div>
+          <h3 class="text-lg font-extrabold">PDFNexa Pro</h3>
+          <p class="text-xs text-indigo-200 mt-1">For power users & professionals</p>
+          <div class="mt-5 flex items-baseline gap-1">
+            <span id="proPrice" class="text-4xl font-extrabold">$9</span>
+            <span class="text-xs text-indigo-200 font-semibold">/ month</span>
+          </div>
+          <ul class="mt-6 space-y-3 text-sm text-indigo-100">
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-purple-300"></i> Unlimited file sizes & batch processing</li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-purple-300"></i> AI OCR text recognition (40+ languages)</li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-purple-300"></i> Legally binding e-Signatures</li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-purple-300"></i> Zero ads & priority cloud servers</li>
+          </ul>
+        </div>
+        <button onclick="openAuthModal('signup')" class="mt-8 w-full py-3 rounded-xl bg-brand-purple hover:bg-brand-purpleHover text-white font-bold text-sm shadow-lg shadow-purple-600/30 transition">
+          Start 7-Day Free Trial
+        </button>
+      </div>
+
+      <!-- Business Tier -->
+      <div class="bg-white rounded-3xl p-8 border border-slate-200 flex flex-col justify-between">
+        <div>
+          <h3 class="text-lg font-extrabold text-brand-indigo">Business Team</h3>
+          <p class="text-xs text-slate-500 mt-1">Centralized billing & team controls</p>
+          <div class="mt-5 flex items-baseline gap-1">
+            <span id="bizPrice" class="text-4xl font-extrabold text-brand-indigo">$24</span>
+            <span class="text-xs text-slate-400 font-semibold">/ user / mo</span>
+          </div>
+          <ul class="mt-6 space-y-3 text-sm text-slate-600">
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-brand-purple"></i> Everything in PDFNexa Pro</li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-brand-purple"></i> Team workspace & shared templates</li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-brand-purple"></i> Single Sign-On (SSO) & Audit Logs</li>
+            <li class="flex items-center gap-2.5"><i data-lucide="check" class="w-4 h-4 text-brand-purple"></i> Dedicated 24/7 account manager</li>
+          </ul>
+        </div>
+        <button onclick="openAuthModal('signup')" class="mt-8 w-full py-3 rounded-xl border border-slate-300 text-brand-indigo font-bold text-sm hover:border-brand-purple hover:text-brand-purple transition">
+          Contact Sales
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Global Footer -->
+  <footer class="bg-brand-indigo text-indigo-200 pt-14 pb-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-10 pb-10 border-b border-white/10">
+        <div>
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-brand-purple flex items-center justify-center font-extrabold text-white text-lg">N</div>
+            <span class="text-xl font-extrabold text-white">PDF<span class="text-purple-400">Nexa</span></span>
+          </div>
+          <p class="text-xs text-indigo-200/75 mt-3 leading-relaxed">
+            The modern cloud workspace to edit, convert, compress, and sign PDF documents from anywhere in the world.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-extrabold uppercase tracking-wider text-white mb-3">Popular Tools</h4>
+          <ul class="space-y-2 text-xs">
+            <li><button onclick="openToolModal('Merge PDF')" class="hover:text-white transition">Merge PDF</button></li>
+            <li><button onclick="openToolModal('Split PDF')" class="hover:text-white transition">Split PDF</button></li>
+            <li><button onclick="openToolModal('Compress PDF')" class="hover:text-white transition">Compress PDF</button></li>
+            <li><button onclick="openToolModal('PDF to Word')" class="hover:text-white transition">PDF to Word</button></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-extrabold uppercase tracking-wider text-white mb-3">Security & Legal</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+            <li><a href="#" class="hover:text-white transition">Terms of Service</a></li>
+            <li><a href="#" class="hover:text-white transition">256-Bit Encryption</a></li>
+            <li><a href="#" class="hover:text-white transition">GDPR Compliance</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-extrabold uppercase tracking-wider text-white mb-3">Language & Region</h4>
+          <select class="w-full bg-white/10 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none">
+            <option class="text-slate-900">English (Global)</option>
+            <option class="text-slate-900">বাংলা (Bengali)</option>
+            <option class="text-slate-900">Español (Spanish)</option>
+            <option class="text-slate-900">Français (French)</option>
+            <option class="text-slate-900">Deutsch (German)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-indigo-300/70 gap-4">
+        <p>© 2026 PDFNexa Inc. All rights reserved.</p>
+        <p>Crafted with Indigo & Purple Precision for Worldwide Productivity.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Interactive Tool Workspace Modal -->
+  <div id="toolModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/65 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-100 relative animate-fadeIn">
+      <button onclick="closeToolModal()" class="absolute top-5 right-5 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+
+      <div class="flex items-center gap-3.5 mb-5">
+        <div id="modalToolIcon" class="w-12 h-12 rounded-2xl bg-purple-100 text-brand-purple flex items-center justify-center">
+          <i data-lucide="file-text" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h3 id="modalToolTitle" class="text-xl font-extrabold text-brand-indigo">Merge PDF</h3>
+          <p id="modalToolDesc" class="text-xs text-slate-500">Combine multiple PDF files into one unified document.</p>
+        </div>
+      </div>
+
+      <!-- File Drop / Status Box -->
+      <div class="rounded-2xl border-2 border-dashed border-purple-200 bg-purple-50/40 p-6 text-center">
+        <input type="file" id="modalFileInput" class="hidden" multiple onchange="handleModalFiles(this.files)" />
+        <p id="modalFileLabel" class="text-sm font-semibold text-slate-700">No file selected yet</p>
+        <p id="modalFileSub" class="text-xs text-slate-400 mt-1">Select a file from your device or use our instant demo file</p>
+        <div class="mt-4 flex flex-wrap justify-center gap-2.5">
+          <button onclick="document.getElementById('modalFileInput').click()" class="px-4 py-2 rounded-xl bg-white border border-slate-200 text-xs font-bold text-brand-indigo hover:border-brand-purple transition">
+            Choose File
+          </button>
+          <button onclick="attachDemoFileToModal()" class="px-4 py-2 rounded-xl bg-purple-100 text-xs font-bold text-brand-purple hover:bg-purple-200 transition">
+            Use Sample_Document.pdf
+          </button>
+        </div>
+      </div>
+
+      <!-- Tool Options -->
+      <div class="mt-5 grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Quality / Mode</label>
+          <select id="modalQuality" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700">
+            <option>Recommended (Balanced)</option>
+            <option>High Fidelity (Print Ready)</option>
+            <option>Extreme Compression (Smallest)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Output Security</label>
+          <select id="modalSecurity" class="w-full border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700">
+            <option>Standard PDF</option>
+            <option>Flatten & Lock Metadata</option>
+            <option>PDF/A Archival Standard</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Progress / Download Area -->
+      <div id="modalProgressWrap" class="hidden mt-5">
+        <div class="flex justify-between text-xs font-bold text-brand-indigo mb-1.5">
+          <span id="modalProgressText">Processing with PDFNexa Engine...</span>
+          <span id="modalProgressPct">100%</span>
+        </div>
+        <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+          <div id="modalProgressBar" class="h-full bg-gradient-to-r from-brand-indigo to-brand-purple w-0 transition-all duration-500"></div>
+        </div>
+      </div>
+
+      <div class="mt-6 flex items-center justify-end gap-3">
+        <button onclick="closeToolModal()" class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100 transition">Cancel</button>
+        <button id="processToolBtn" onclick="runPdfTool()" class="px-6 py-2.5 rounded-xl bg-brand-purple hover:bg-brand-purpleHover text-white text-xs font-bold shadow-lg shadow-purple-600/25 transition flex items-center gap-2">
+          <i data-lucide="play" class="w-3.5 h-3.5"></i>
+          Process & Download PDF
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Auth Modal -->
+  <div id="authModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/65 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-7 shadow-2xl relative">
+      <button onclick="closeAuthModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+      <div class="text-center mb-6">
+        <div class="w-11 h-11 mx-auto rounded-2xl bg-brand-purple text-white font-extrabold flex items-center justify-center text-lg mb-3">N</div>
+        <h3 id="authTitle" class="text-xl font-extrabold text-brand-indigo">Create your PDFNexa Account</h3>
+        <p class="text-xs text-slate-500 mt-1">Sync your files and access 32+ tools anywhere.</p>
+      </div>
+      <form onsubmit="event.preventDefault(); closeAuthModal(); alert('Welcome to PDFNexa! Your workspace is ready.');" class="space-y-3.5">
+        <input type="email" required placeholder="Work or personal email" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-purple" />
+        <input type="password" required placeholder="Password (min. 8 characters)" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-purple" />
+        <button type="submit" class="w-full py-3 rounded-xl bg-brand-indigo hover:bg-brand-purple text-white font-bold text-sm transition">Continue to Workspace</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const TOOLS = [
+      { name: 'Merge PDF', cat: 'organize', icon: 'layers', color: 'purple', desc: 'Combine multiple PDFs in the exact order you want.' },
+      { name: 'Split PDF', cat: 'organize', icon: 'scissors', color: 'indigo', desc: 'Separate one page or a whole set into independent PDFs.' },
+      { name: 'Remove Pages', cat: 'organize', icon: 'file-minus', color: 'violet', desc: 'Delete unwanted pages from any PDF document effortlessly.' },
+      { name: 'Extract Pages', cat: 'organize', icon: 'file-output', color: 'purple', desc: 'Get a new document containing only your desired pages.' },
+      { name: 'Organize PDF', cat: 'organize', icon: 'layout-grid', color: 'indigo', desc: 'Sort, reorder, add, or delete PDF pages visually.' },
+      { name: 'Scan to PDF', cat: 'organize', icon: 'scan-line', color: 'violet', desc: 'Capture documents from mobile and send straight to PDF.' },
+
+      { name: 'Compress PDF', cat: 'optimize', icon: 'minimize-2', color: 'purple', desc: 'Reduce file size while optimizing for maximal PDF quality.' },
+      { name: 'Repair PDF', cat: 'optimize', icon: 'wrench', color: 'indigo', desc: 'Recover data from corrupted or damaged PDF files.' },
+      { name: 'OCR PDF', cat: 'optimize', icon: 'scan-text', color: 'violet', desc: 'Convert scanned PDFs into searchable and selectable text.' },
+      { name: 'Flatten PDF', cat: 'optimize', icon: 'layers-2', color: 'purple', desc: 'Lock interactive form fields and annotations permanently.' },
+
+      { name: 'PDF to Word', cat: 'from-pdf', icon: 'file-text', color: 'indigo', desc: 'Convert PDF documents into easy-to-edit DOCX files.' },
+      { name: 'PDF to PowerPoint', cat: 'from-pdf', icon: 'presentation', color: 'purple', desc: 'Turn your PDFs into editable PPTX slideshows.' },
+      { name: 'PDF to Excel', cat: 'from-pdf', icon: 'table', color: 'violet', desc: 'Pull data straight from PDFs into Excel spreadsheets.' },
+      { name: 'PDF to JPG', cat: 'from-pdf', icon: 'image', color: 'indigo', desc: 'Convert each PDF page into a high-resolution JPG image.' },
+      { name: 'PDF to PNG', cat: 'from-pdf', icon: 'file-image', color: 'purple', desc: 'Export crisp lossless PNG images from your PDF pages.' },
+      { name: 'PDF to HTML', cat: 'from-pdf', icon: 'code-2', color: 'violet', desc: 'Transform PDF documents into clean, responsive web HTML.' },
+      { name: 'PDF to PDF/A', cat: 'from-pdf', icon: 'archive', color: 'indigo', desc: 'Convert to ISO-standardized PDF/A for long-term archiving.' },
+
+      { name: 'Word to PDF', cat: 'to-pdf', icon: 'file-check', color: 'purple', desc: 'Make DOC and DOCX files easy to read by converting to PDF.' },
+      { name: 'PowerPoint to PDF', cat: 'to-pdf', icon: 'monitor-play', color: 'indigo', desc: 'Convert PPT and PPTX presentations into crisp PDFs.' },
+      { name: 'Excel to PDF', cat: 'to-pdf', icon: 'sheet', color: 'violet', desc: 'Make XLSX spreadsheets clean and print-ready as PDF.' },
+      { name: 'JPG to PDF', cat: 'to-pdf', icon: 'images', color: 'purple', desc: 'Convert JPG, PNG, and WebP images to PDF in seconds.' },
+      { name: 'HTML to PDF', cat: 'to-pdf', icon: 'globe', color: 'indigo', desc: 'Convert web pages or raw HTML code into formatted PDFs.' },
+      { name: 'Markdown to PDF', cat: 'to-pdf', icon: 'file-code', color: 'violet', desc: 'Render technical Markdown notes into styled PDF docs.' },
+
+      { name: 'Edit PDF', cat: 'security', icon: 'pen-tool', color: 'purple', desc: 'Add text, images, shapes, or freehand annotations to a PDF.' },
+      { name: 'Rotate PDF', cat: 'security', icon: 'rotate-cw', color: 'indigo', desc: 'Rotate individual pages or entire PDFs right-side up.' },
+      { name: 'Add Page Numbers', cat: 'security', icon: 'hash', color: 'violet', desc: 'Insert customizable page numbers with position & typography.' },
+      { name: 'Add Watermark', cat: 'security', icon: 'stamp', color: 'purple', desc: 'Stamp text or logo watermarks over your PDF with transparency.' },
+      { name: 'Crop PDF', cat: 'security', icon: 'crop', color: 'indigo', desc: 'Trim margins or select specific visible areas of PDF pages.' },
+      { name: 'Unlock PDF', cat: 'security', icon: 'unlock', color: 'violet', desc: 'Remove PDF password security so you can freely use your file.' },
+      { name: 'Protect PDF', cat: 'security', icon: 'lock', color: 'purple', desc: 'Encrypt your PDF with a strong password against unauthorized access.' },
+      { name: 'Sign PDF', cat: 'security', icon: 'signature', color: 'indigo', desc: 'Sign yourself or request electronic signatures from others.' },
+      { name: 'Redact PDF', cat: 'security', icon: 'eye-off', color: 'violet', desc: 'Permanently black out sensitive text and confidential graphics.' }
+    ];
+
+    let activeCategory = 'all';
+    let selectedFiles = [];
+
+    function renderTools() {
+      const grid = document.getElementById('toolsGrid');
+      const query = document.getElementById('toolSearchInput').value.toLowerCase().trim();
+
+      const filtered = TOOLS.filter(tool => {
+        const matchesCat = activeCategory === 'all' || tool.cat === activeCategory;
+        const matchesQuery = tool.name.toLowerCase().includes(query) || tool.desc.toLowerCase().includes(query);
+        return matchesCat && matchesQuery;
+      });
+
+      grid.innerHTML = filtered.map(tool => {
+        const badgeStyles = {
+          purple: 'bg-purple-100 text-brand-purple',
+          indigo: 'bg-indigo-100 text-brand-indigo',
+          violet: 'bg-violet-100 text-violet-700'
+        }[tool.color];
+
+        return `
+          <button onclick="openToolModal('${tool.name}')" class="tool-card bg-white p-6 rounded-2xl border border-slate-200/80 text-left flex flex-col justify-between group">
+            <div>
+              <div class="w-11 h-11 rounded-xl ${badgeStyles} flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+                <i data-lucide="${tool.icon}" class="w-5 h-5"></i>
+              </div>
+              <h3 class="text-base font-extrabold text-brand-indigo group-hover:text-brand-purple transition">${tool.name}</h3>
+              <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">${tool.desc}</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-brand-purple opacity-80 group-hover:opacity-100">
+              <span>Launch Tool</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform"></i>
+            </div>
+          </button>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    function filterByCategory(cat) {
+      activeCategory = cat;
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        if (btn.dataset.cat === cat) {
+          btn.className = 'cat-btn active px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-brand-indigo text-white shadow-sm transition';
+        } else {
+          btn.className = 'cat-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white text-slate-600 border border-slate-200 hover:border-brand-purple/40 transition';
+        }
+      });
+      renderTools();
+    }
+
+    // Drag & Drop on Hero
+    const dropzone = document.getElementById('heroDropzone');
+    const heroInput = document.getElementById('heroFileInput');
+
+    ['dragenter', 'dragover'].forEach(evt => {
+      dropzone.addEventListener(evt, e => {
+        e.preventDefault();
+        dropzone.classList.add('dropzone-active');
+      });
+    });
+
+    ['dragleave', 'drop'].forEach(evt => {
+      dropzone.addEventListener(evt, e => {
+        e.preventDefault();
+        dropzone.classList.remove('dropzone-active');
+      });
+    });
+
+    dropzone.addEventListener('drop', e => {
+      if (e.dataTransfer.files.length) {
+        selectedFiles = Array.from(e.dataTransfer.files);
+        openToolModal('Compress PDF');
+        updateModalFileDisplay();
+      }
+    });
+
+    heroInput.addEventListener('change', e => {
+      if (e.target.files.length) {
+        selectedFiles = Array.from(e.target.files);
+        openToolModal('Merge PDF');
+        updateModalFileDisplay();
+      }
+    });
+
+    function loadSampleFile() {
+      selectedFiles = [{ name: 'PDFNexa_Quarterly_Report_2026.pdf', size: 1482000 }];
+      openToolModal('Compress PDF');
+      updateModalFileDisplay();
+    }
+
+    // Modal Controls
+    function openToolModal(toolName) {
+      const tool = TOOLS.find(t => t.name === toolName) || TOOLS[0];
+      document.getElementById('modalToolTitle').textContent = tool.name;
+      document.getElementById('modalToolDesc').textContent = tool.desc;
+      document.getElementById('modalProgressWrap').classList.add('hidden');
+      document.getElementById('modalProgressBar').style.width = '0%';
+      updateModalFileDisplay();
+
+      const modal = document.getElementById('toolModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      lucide.createIcons();
+    }
+
+    function closeToolModal() {
+      const modal = document.getElementById('toolModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function handleModalFiles(fileList) {
+      selectedFiles = Array.from(fileList);
+      updateModalFileDisplay();
+    }
+
+    function attachDemoFileToModal() {
+      selectedFiles = [{ name: 'Sample_Document.pdf', size: 845000 }];
+      updateModalFileDisplay();
+    }
+
+    function updateModalFileDisplay() {
+      const label = document.getElementById('modalFileLabel');
+      const sub = document.getElementById('modalFileSub');
+      if (selectedFiles.length > 0) {
+        const names = selectedFiles.map(f => f.name).join(', ');
+        label.textContent = `${selectedFiles.length} file(s) ready: ${names}`;
+        sub.textContent = 'Ready for instant cloud processing';
+      } else {
+        label.textContent = 'No file selected yet';
+        sub.textContent = 'Select a file from your device or use our instant demo file';
+      }
+    }
+
+    async function runPdfTool() {
+      if (selectedFiles.length === 0) {
+        attachDemoFileToModal();
+      }
+      const toolTitle = document.getElementById('modalToolTitle').textContent;
+      const quality = document.getElementById('modalQuality').value;
+      const security = document.getElementById('modalSecurity').value;
+
+      const wrap = document.getElementById('modalProgressWrap');
+      const bar = document.getElementById('modalProgressBar');
+      const statusText = document.getElementById('modalProgressText');
+
+      wrap.classList.remove('hidden');
+      statusText.textContent = `Running ${toolTitle}...`;
+      bar.style.width = '45%';
+
+      setTimeout(async () => {
+        bar.style.width = '100%';
+        statusText.textContent = 'Completed! Downloading processed PDF...';
+
+        // Generate real downloadable PDF via pdf-lib
+        const { PDFDocument, StandardFonts, rgb } = PDFLib;
+        const pdfDoc = await PDFDocument.create();
+        const page = pdfDoc.addPage([595, 842]);
+        const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+        const fontReg = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+        page.drawRectangle({ x: 0, y: 740, width: 595, height: 102, color: rgb(0.118, 0.106, 0.294) });
+        page.drawText('PDFNexa — Processed Document Summary', { x: 45, y: 785, size: 20, font: fontBold, color: rgb(1, 1, 1) });
+        page.drawText('Global All-in-One PDF Suite', { x: 45, y: 762, size: 11, font: fontReg, color: rgb(0.77, 0.71, 0.99) });
+
+        page.drawText(`Action Performed: ${toolTitle}`, { x: 45, y: 690, size: 14, font: fontBold, color: rgb(0.486, 0.227, 0.929) });
+        page.drawText(`Source File(s): ${selectedFiles.map(f => f.name).join(', ')}`, { x: 45, y: 660, size: 11, font: fontReg, color: rgb(0.15, 0.15, 0.2) });
+        page.drawText(`Quality Mode: ${quality}`, { x: 45, y: 638, size: 11, font: fontReg, color: rgb(0.15, 0.15, 0.2) });
+        page.drawText(`Security Profile: ${security}`, { x: 45, y: 616, size: 11, font: fontReg, color: rgb(0.15, 0.15, 0.2) });
+        page.drawText(`Timestamp: ${new Date().toUTCString()}`, { x: 45, y: 594, size: 11, font: fontReg, color: rgb(0.4, 0.4, 0.48) });
+
+        const pdfBytes = await pdfDoc.save();
+        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `PDFNexa_${toolTitle.replace(/\s+/g, '_')}.pdf`;
+        a.click();
+        URL.revokeObjectURL(url);
+      }, 650);
+    }
+
+    function toggleBilling(plan) {
+      const mBtn = document.getElementById('monthlyBtn');
+      const yBtn = document.getElementById('yearlyBtn');
+      const proPrice = document.getElementById('proPrice');
+      const bizPrice = document.getElementById('bizPrice');
+
+      if (plan === 'yearly') {
+        yBtn.className = 'px-4 py-2 rounded-xl text-xs font-bold bg-brand-indigo text-white transition';
+        mBtn.className = 'px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-brand-indigo transition';
+        proPrice.textContent = '$5';
+        bizPrice.textContent = '$14';
+      } else {
+        mBtn.className = 'px-4 py-2 rounded-xl text-xs font-bold bg-brand-indigo text-white transition';
+        yBtn.className = 'px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-brand-indigo transition';
+        proPrice.textContent = '$9';
+        bizPrice.textContent = '$24';
+      }
+    }
+
+    function openAuthModal(mode) {
+      document.getElementById('authTitle').textContent = mode === 'login' ? 'Welcome Back to PDFNexa' : 'Create your PDFNexa Account';
+      const modal = document.getElementById('authModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeAuthModal() {
+      const modal = document.getElementById('authModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    // Initialize
+    renderTools();
+    lucide.createIcons();
+  </script>
+</body>
+</html>
